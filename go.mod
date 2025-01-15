@@ -1,4 +1,4 @@
-module github.com/olezhek28/microservices_course_boilerplate
+module github.com/DeNisBuLgAkOv/microservices-golang/auth
 
 go 1.23
 
