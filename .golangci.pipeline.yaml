@@ -30,11 +30,11 @@ linters-settings:
     min-occurrences: 2
 
 linters:
-  disable-all: true
+  disable:
+    - goimports
   enable:
     - errcheck
     - goconst
-    - goimports
     - gosec
     - govet
     - ineffassign
