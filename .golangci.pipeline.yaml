@@ -30,9 +30,8 @@ linters-settings:
     min-occurrences: 2
 
 linters:
-  disable:
-    - goimports
   enable:
+    - goimports
     - errcheck
     - goconst
     - gosec

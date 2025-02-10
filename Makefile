@@ -1,12 +1,7 @@
-LOCAL_BIN := C:/Users/Denis/Desktop/microservices-golang/auth/bin
+LOCAL_BIN:=$(CURDIR)/bin
 
 install-golangci-lint:
-	@if not exist "$(LOCAL_BIN)/golangci-lint.exe" (
-		echo Installing golangci-lint...
-		go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
-	) else (
-		echo golangci-lint.exe already installed.
-	)
+	GOBIN=$(LOCAL_BIN) go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
 
 lint:
-	$(LOCAL_BIN)/golangci-lint.exe run ./... --config .golangci.pipeline.yaml
+	$(LOCAL_BIN)/golangci-lint run ./... --config .golangci.pipeline.yaml
