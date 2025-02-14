@@ -9,15 +9,16 @@ import "google/protobuf/empty.proto";
 option go_package = "./user";
 
 service UserService {
-  rpc Create (CreateUserRequest) returns (CreateUserResponse);
-  rpc Get (GetUserRequest) returns (GetUserResponse);
-  rpc Update (UpdateUserRequest) returns (google.protobuf.Empty);
-  rpc Delete (DeleteUserRequest) returns (google.protobuf.Empty);
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (google.protobuf.Empty);
+  rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty);
 }
 
 enum Role {
-  USER = 0;
-  ADMIN = 1;
+  UNKNOWN = 0;
+  USER = 1;
+  ADMIN = 2;
 }
 
 message CreateUserRequest {
@@ -48,7 +49,7 @@ message GetUserResponse {
 message UpdateUserRequest {
   int64 id = 1;
   google.protobuf.StringValue name = 2;
-  google.protobuf.StringValue email = 3;
+  string email = 3;
   Role role = 4;
 }
 
