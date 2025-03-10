@@ -21,13 +21,13 @@ type server struct {
 	user.UnimplementedUserServiceServer
 }
 
-// GetUser - получить данные о пользователе
+// GetUser - получить данные о  пользователе!
 func (s *server) GetUser(_ context.Context, req *user.GetUserRequest) (*user.GetUserResponse, error) {
 	id := req.GetId()
 	return &user.GetUserResponse{
 		Id:        id,
 		Name:      "Denis",
-		Email:     "sadasda@yandex.ru",
+		Email:     "rus@yandex.ru",
 		Role:      user.Role_ADMIN,
 		CreatedAt: timestamppb.New(gofakeit.Date()),
 		UpdatedAt: timestamppb.New(gofakeit.Date()),
