@@ -3,7 +3,6 @@ syntax = "proto3";
 package auth;
 
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
 
 option go_package = "./user";
@@ -48,7 +47,7 @@ message GetUserResponse {
 
 message UpdateUserRequest {
   int64 id = 1;
-  google.protobuf.StringValue name = 2;
+  string name = 2;
   string email = 3;
   Role role = 4;
 }
