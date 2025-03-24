@@ -9,6 +9,7 @@ import (
 	"github.com/microservices-golang/auth/pkg/user"
 )
 
+// DbRepo определяет контракт для работы с базой данных.
 type DbRepo interface {
 	Insert(ctx context.Context, req *user.CreateUserRequest) (int64, error)
 	Get(ctx context.Context, req int64) (*user.GetUserResponse, error)
@@ -16,15 +17,18 @@ type DbRepo interface {
 	Delete(ctx context.Context, req *user.DeleteUserRequest) error
 }
 
+// Service реализует gRPC-сервер для работы с пользователями
 type Service struct {
 	user.UnimplementedUserServiceServer
 	dbR DbRepo
 }
 
+// NewService создает новый экземпляр UserService
 func NewService(dbR DbRepo) *Service {
 	return &Service{dbR: dbR}
 }
 
+// GetUser возвращает информацию о пользователе
 func (s *Service) GetUser(ctx context.Context, req *user.GetUserRequest) (*user.GetUserResponse, error) {
 	userData, _ := s.dbR.Get(ctx, req.Id)
 

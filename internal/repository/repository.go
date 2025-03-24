@@ -12,6 +12,7 @@ import (
 	"github.com/microservices-golang/auth/pkg/user"
 )
 
+// Repository предоставляет доступ к методам в PostgreSQL
 type Repository struct {
 	pool *pgxpool.Pool
 }
@@ -20,8 +21,8 @@ const (
 	dbDSN = "host=localhost port=54321 dbname=microservice-auth user=bulgakov password=bulgakov sslmode=disable"
 )
 
+// NewRepository создает новый экземпляр Repository с пулом соединений к БД
 func NewRepository(ctx context.Context) *Repository {
-
 	// Создаем пул соединений с базой данных
 	pool, err := pgxpool.Connect(ctx, dbDSN)
 	if err != nil {
@@ -31,7 +32,7 @@ func NewRepository(ctx context.Context) *Repository {
 	return &Repository{pool: pool}
 }
 
-// запрос в бд для добавления данных о пользователе
+// Insert осуществляет запрос в бд для добавления данных о пользователе
 func (r *Repository) Insert(ctx context.Context, req *user.CreateUserRequest) (int64, error) {
 	var id int64
 	query := "INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id"
@@ -44,22 +45,21 @@ func (r *Repository) Insert(ctx context.Context, req *user.CreateUserRequest) (i
 	return id, nil
 }
 
-// запрос в бд для получения данных о пользователе
-func (r *Repository) Get(ctx context.Context, reqId int64) (*user.GetUserResponse, error) {
-	fmt.Println(reqId)
+// Get осущестляет запрос в бд для получения данных о пользователе
+func (r *Repository) Get(ctx context.Context, reqID int64) (*user.GetUserResponse, error) {
 	var id int64
 	var name, email string
 	var roleStr string
-	var created_at, updated_at time.Time
+	var createdAt, updatedAt time.Time
 	query := `SELECT id, name, email, role, created_at, updated_at 	FROM users 	WHERE id = $1`
 
-	err := r.pool.QueryRow(ctx, query, reqId).Scan(&id, &name, &email, &roleStr, &created_at, &updated_at)
+	err := r.pool.QueryRow(ctx, query, reqID).Scan(&id, &name, &email, &roleStr, &createdAt, &updatedAt)
 	if err != nil {
 		log.Printf("Ошибка при получении пользователя: %v", err)
 		return nil, fmt.Errorf("Ошибка при получении пользователя: %v", err)
 	}
-	createdAtProto := timestamppb.New(created_at)
-	updatedAtProto := timestamppb.New(updated_at)
+	createdAtProto := timestamppb.New(createdAt)
+	updatedAtProto := timestamppb.New(updatedAt)
 
 	var role user.Role
 	switch roleStr {
@@ -76,7 +76,7 @@ func (r *Repository) Get(ctx context.Context, reqId int64) (*user.GetUserRespons
 	}, nil
 }
 
-// запрос в бд для обновления данных о пользователе
+// Update осуществляет запрос в бд для обновления данных о пользователе
 func (r *Repository) Update(ctx context.Context, req *user.UpdateUserRequest) error {
 
 	query := `UPDATE users SET name = $1, email = $2, role = $3, updated_at = NOW() WHERE id = $4`
@@ -90,7 +90,7 @@ func (r *Repository) Update(ctx context.Context, req *user.UpdateUserRequest) er
 	return nil
 }
 
-// запрос в бд для удаления пользователя по id
+// Delete осуществляет запрос в бд для удаления пользователя по id
 func (r *Repository) Delete(ctx context.Context, req *user.DeleteUserRequest) error {
 
 	query := `DELETE FROM users WHERE id = $1`
